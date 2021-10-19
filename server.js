@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const console_table = require("console.table");
+require("console.table");
 
 const db = mysql.createConnection(
     {
@@ -10,7 +10,7 @@ const db = mysql.createConnection(
         database: 'employee_db'
     },
     console.log('Connected to the employee_db database.')
-)
+);
 
 const cmdPrompt = () => {
     inquirer
@@ -23,10 +23,19 @@ const cmdPrompt = () => {
         }
     ])
     .then((answers) => {
-
+        if (answers.cmd == 'View All Employees') {
+            viewAllEmployees();
+        }
     });
 }
 
 const viewAllEmployees = () => {
-    mysql.
+    const sql = `SELECT * FROM employees`;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(rows);
+    });
 }
