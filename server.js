@@ -50,4 +50,16 @@ const viewAllEmployees = () => {
     });
 }
 
+const viewAllDepartments = () => {
+    const sql = `SELECT * FROM departments`;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(rows);
+    });
+}
+
+
 cmdPrompt();
