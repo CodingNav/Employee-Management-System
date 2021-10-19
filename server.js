@@ -14,19 +14,19 @@ const db = mysql.createConnection(
 
 const cmdPrompt = () => {
     inquirer
-    .prompt([
-        {
-            type: 'list',
-            name: 'cmd',
-            message: 'What would you like to do?',
-            choices: ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'Quit']
-        }
-    ])
-    .then((answers) => {
-        if (answers.cmd == 'View All Employees') {
-            viewAllEmployees();
-        }
-    });
+        .prompt([
+            {
+                type: 'list',
+                name: 'cmd',
+                message: 'What would you like to do?',
+                choices: ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'Quit']
+            }
+        ])
+        .then((answers) => {
+            if (answers.cmd == 'View All Employees') {
+                viewAllEmployees();
+            }
+        });
 }
 
 const viewAllEmployees = () => {
@@ -39,7 +39,6 @@ const viewAllEmployees = () => {
                 ON roles.department_id = departments.id
                 LEFT JOIN employees AS managers
                 ON employees.manager_id = managers.id;
-    
                 `;
     db.query(sql, (err, rows) => {
         if (err) {
@@ -61,5 +60,20 @@ const viewAllDepartments = () => {
     });
 }
 
+const viewAllRoles = () => {
+    const sql = `
+        SELECT roles.id, roles.title, departments.name AS department_name, roles.salary
+        FROM roles
+        LEFT JOIN departments
+        ON roles.department_id = departments.id
+    `;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(rows);
+    });
+}
 
 cmdPrompt();
