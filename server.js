@@ -26,6 +26,12 @@ const cmdPrompt = () => {
             if (answers.cmd == 'View All Employees') {
                 viewAllEmployees();
             }
+            else if (answers.cmd == 'View All Roles') {
+                viewAllRoles();
+            }
+            else if (answers.cmd == 'View All Departments') {
+                viewAllDepartments();
+            }
         });
 }
 
@@ -40,17 +46,6 @@ const viewAllEmployees = () => {
                 LEFT JOIN employees AS managers
                 ON employees.manager_id = managers.id;
                 `;
-    db.query(sql, (err, rows) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.table(rows);
-    });
-}
-
-const viewAllDepartments = () => {
-    const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
         if (err) {
             console.log(err);
@@ -76,4 +71,14 @@ const viewAllRoles = () => {
     });
 }
 
+const viewAllDepartments = () => {
+    const sql = `SELECT * FROM departments`;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(rows);
+    });
+}
 cmdPrompt();
