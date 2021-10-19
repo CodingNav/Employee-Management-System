@@ -30,7 +30,17 @@ const cmdPrompt = () => {
 }
 
 const viewAllEmployees = () => {
-    const sql = `SELECT * FROM employees`;
+    const sql = `
+                SELECT employees.id, employees.first_name, employees.last_name, departments.name AS department_name, roles.salary, CONCAT(managers.first_name," ", managers.last_name) AS manager
+                FROM employees
+                LEFT JOIN roles
+                ON employees.role_id = roles.id
+                LEFT JOIN departments
+                ON roles.department_id = departments.id
+                LEFT JOIN employees AS managers
+                ON employees.manager_id = managers.id;
+    
+                `;
     db.query(sql, (err, rows) => {
         if (err) {
             console.log(err);
@@ -39,3 +49,5 @@ const viewAllEmployees = () => {
         console.table(rows);
     });
 }
+
+cmdPrompt();
