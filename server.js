@@ -1,7 +1,9 @@
+// required packages
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 require("console.table");
 
+// creates a connection to the db
 const db = mysql.createConnection(
     {
         host: "localhost",
@@ -12,6 +14,7 @@ const db = mysql.createConnection(
     console.log("Connected to the employee_db database.")
 );
 
+// first prompt of CLI with all the commands
 const cmdPrompt = () => {
     inquirer
         .prompt([
@@ -41,6 +44,7 @@ const cmdPrompt = () => {
         });
 }
 
+// function for viewing all employees in the db
 const viewAllEmployees = () => {
     const sql = `
                 SELECT employees.id, employees.first_name, employees.last_name, departments.name AS department_name, roles.salary, CONCAT(managers.first_name," ", managers.last_name) AS manager
@@ -61,6 +65,7 @@ const viewAllEmployees = () => {
     });
 }
 
+// function for viewing all roles in the db
 const viewAllRoles = () => {
     const sql = `
         SELECT roles.id, roles.title, departments.name AS department_name, roles.salary
@@ -77,6 +82,7 @@ const viewAllRoles = () => {
     });
 }
 
+// function for viewing all departments in the db
 const viewAllDepartments = () => {
     const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
@@ -88,6 +94,7 @@ const viewAllDepartments = () => {
     });
 }
 
+// function to add a new employee to the db
 const addEmployee = () => {
     const sql = `SELECT * FROM roles`;
     db.query(sql, (err, rows) => {
@@ -154,6 +161,7 @@ const addEmployee = () => {
     });
 }
 
+// function to add a new role to the db
 const addRole = () => {
     const sql = `SELECT * FROM departments`;
     db.query(sql, (err, rows) => {
