@@ -86,7 +86,7 @@ const viewAllDepartments = () => {
 }
 
 const addEmployee = () => {
-    const sql = `SELECT * FROM roles`
+    const sql = `SELECT * FROM roles`;
     db.query(sql, (err, rows) => {
         if (err) {
             console.log(err);
@@ -124,7 +124,7 @@ const addEmployee = () => {
                     {
                         type: "list",
                         name: "manager",
-                        message: "What is the employee's manager?",
+                        message: "Who is the employee's manager?",
                         choices: [{ name: "None", value: null }, ...manager_rows.map((manager) => {
                             return {
                                 name: manager.first_name + " " + manager.last_name,
@@ -143,13 +143,58 @@ const addEmployee = () => {
                             console.log(err);
                             return;
                         }
-                        console.log("Added " + answers.first_name + " " + answers.last_name + " to the database")
+                        console.log("Added " + answers.first_name + " " + answers.last_name + " to the database");
                     });
                 });
         })
 
     });
+}
 
+const addRole = () => {
+    const sql = `SELECT * FROM departments`;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "role",
+                message: "What is the name of the role?"
+            },
+            {
+                type: "number",
+                name: "salary",
+                message: "What is the salary of the role?"
+            },
+            {
+                type: "list",
+                name: "department",
+                message: "What department does the role belong to?",
+                choices: rows.map((department) => {
+                    return {
+                        name: department.name,
+                        value: department.id
+                    }
+                })
+            }
+        ])
+        .then((answers) => {
+            const sql = `
+            INSERT INTO roles (title, salary, department_id)
+            VALUES (${answers.role}, ${answers.salary}, ${answers.department})
+            `;
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log("Added " + answers.role + " to the database");
+            });
+        });
+    });
 }
 
 cmdPrompt();
