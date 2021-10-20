@@ -149,7 +149,7 @@ const addEmployee = () => {
                 .then((answers) => {
                     const sql = `
                         INSERT INTO employees (first_name, last_name, role_id, manager_id)
-                        VALUES (${answers.first_name}, ${answers.last_name}, ${answers.role}, ${answers.manager});
+                        VALUES ("${answers.first_name}", "${answers.last_name}", "${answers.role}", "${answers.manager}");
                     `;
                     db.query(sql, (err, rows) => {
                         if (err) {
@@ -198,7 +198,7 @@ const addRole = () => {
         .then((answers) => {
             const sql = `
             INSERT INTO roles (title, salary, department_id)
-            VALUES (${answers.role}, ${answers.salary}, ${answers.department});
+            VALUES ("${answers.role}", "${answers.salary}", "${answers.department}");
             `;
             db.query(sql, (err, rows) => {
                 if (err) {
@@ -224,7 +224,7 @@ const addDepartment = () => {
     .then((answers) => {
         const sql = `
         INSERT INTO departments (name)
-        VALUES (${answers.name});
+        VALUES ("${answers.name}");
         `
         db.query(sql, (err, rows) => {
             if (err) {
@@ -235,4 +235,5 @@ const addDepartment = () => {
         });
     });
 }
+
 cmdPrompt();
