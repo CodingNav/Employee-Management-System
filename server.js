@@ -2,6 +2,8 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const colors = require("colors");
+const figlet = require("figlet");
+const boxen = require("boxen");
 require("console.table");
 
 // creates a connection to the db
@@ -233,47 +235,47 @@ const addRole = () => {
                 })
             }
         ])
-        .then((answers) => {
-            const sql = `
+            .then((answers) => {
+                const sql = `
             INSERT INTO roles (title, salary, department_id)
             VALUES ("${answers.role}", ${answers.salary}, ${answers.department});
             `;
-            db.query(sql, (err, rows) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                console.log("Added " + answers.role + " to the database");
-                cmdPrompt();
+                db.query(sql, (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log("Added " + answers.role + " to the database");
+                    cmdPrompt();
+                });
             });
-        });
     });
 }
 
 // function to add a new department to the db
 const addDepartment = () => {
     inquirer
-    .prompt([
-        {
-            type: "input",
-            name: "name",
-            message: "What is the name of the department?"
-        }
-    ])
-    .then((answers) => {
-        const sql = `
+        .prompt([
+            {
+                type: "input",
+                name: "name",
+                message: "What is the name of the department?"
+            }
+        ])
+        .then((answers) => {
+            const sql = `
         INSERT INTO departments (name)
         VALUES ("${answers.name}");
         `
-        db.query(sql, (err, rows) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            console.log("Added " + answers.name + " to the database");
-            cmdPrompt();
+            db.query(sql, (err, rows) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log("Added " + answers.name + " to the database");
+                cmdPrompt();
+            });
         });
-    });
 }
 
 // function to update an employee in the db
@@ -291,47 +293,64 @@ const updateEmployeeRole = () => {
                 return;
             }
             inquirer
-            .prompt([
-                {
-                    type: "list",
-                    name: "name",
-                    message: "Which employee's role do you want to update?",
-                    choices: rows.map((employee) => {
-                        return {
-                            name: employee.first_name + " " + employee.last_name,
-                            value: employee.id
-                        }
-                    })
-                },
-                {
-                    type: "list",
-                    name: "role",
-                    message: "Which role do you want to assign the selected employee?",
-                    choices: role_rows.map((role) => {
-                        return {
-                            name: role.title,
-                            value: role.id
-                        }
-                    })
-                }
-            ])
-            .then((answers) => {
-                const sql = `
+                .prompt([
+                    {
+                        type: "list",
+                        name: "name",
+                        message: "Which employee's role do you want to update?",
+                        choices: rows.map((employee) => {
+                            return {
+                                name: employee.first_name + " " + employee.last_name,
+                                value: employee.id
+                            }
+                        })
+                    },
+                    {
+                        type: "list",
+                        name: "role",
+                        message: "Which role do you want to assign the selected employee?",
+                        choices: role_rows.map((role) => {
+                            return {
+                                name: role.title,
+                                value: role.id
+                            }
+                        })
+                    }
+                ])
+                .then((answers) => {
+                    const sql = `
                 UPDATE employees
                 SET role_id = ${answers.role}
                 WHERE id = ${answers.name}
                 `;
-                db.query(sql, (err, rows) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    console.log("Updated employee's role");
-                    cmdPrompt();
+                    db.query(sql, (err, rows) => {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        console.log("Updated employee's role");
+                        cmdPrompt();
+                    });
                 });
-            });
         })
     });
 }
 
-cmdPrompt();
+figlet('Employee', function (err, employee_text) {
+    if (err) {
+        console.log('Something went wrong...');
+        console.dir(err);
+        return;
+    }
+    figlet('Management', function (err, management_text) {
+        if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+        }
+        console.log(boxen(employee_text + "\n" + management_text, {padding: 1, margin: 1, borderStyle: 'double'}).rainbow);
+        cmdPrompt();
+    })
+
+});
+

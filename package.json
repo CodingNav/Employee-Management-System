@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/CodingNav/Employee-Management-System#readme",
   "dependencies": {
+    "boxen": "5.1.2",
     "colors": "^1.4.0",
     "console.table": "^0.10.0",
+    "figlet": "^1.5.2",
     "inquirer": "^8.2.0",
     "mysql2": "^2.3.2"
   }
