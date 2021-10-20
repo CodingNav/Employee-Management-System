@@ -22,7 +22,7 @@ const cmdPrompt = () => {
                 type: "list",
                 name: "cmd",
                 message: "What would you like to do?",
-                choices: ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department", "Quit"]
+                choices: ["View All Employees", "View All Roles", "View All Departments", "Add Employee", "Add Role", "Add Department", "Update Employee Role", "Quit"]
             }
         ])
         .then((answers) => {
@@ -47,6 +47,14 @@ const cmdPrompt = () => {
             else if (answers.cmd == "Update Employee Role") {
                 updateEmployeeRole();
             }
+            else {
+                return db.end((err) => {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log("Thank you for using the employee");
+                });
+            }
         });
 }
 
@@ -68,6 +76,7 @@ const viewAllEmployees = () => {
             return;
         }
         console.table(rows);
+        cmdPrompt();
     });
 }
 
@@ -85,6 +94,7 @@ const viewAllRoles = () => {
             return;
         }
         console.table(rows);
+        cmdPrompt();
     });
 }
 
@@ -97,6 +107,7 @@ const viewAllDepartments = () => {
             return;
         }
         console.table(rows);
+        cmdPrompt();
     });
 }
 
@@ -160,6 +171,7 @@ const addEmployee = () => {
                             return;
                         }
                         console.log("Added " + answers.first_name + " " + answers.last_name + " to the database");
+                        cmdPrompt();
                     });
                 });
         })
@@ -209,6 +221,7 @@ const addRole = () => {
                     return;
                 }
                 console.log("Added " + answers.role + " to the database");
+                cmdPrompt();
             });
         });
     });
@@ -235,6 +248,7 @@ const addDepartment = () => {
                 return;
             }
             console.log("Added " + answers.name + " to the database");
+            cmdPrompt();
         });
     });
 }
@@ -289,11 +303,11 @@ const updateEmployeeRole = () => {
                         console.log(err);
                         return;
                     }
-                    console.log("Updated employee's role")
+                    console.log("Updated employee's role");
+                    cmdPrompt();
                 });
             });
         })
-
     });
 }
 
