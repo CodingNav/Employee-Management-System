@@ -35,6 +35,9 @@ const cmdPrompt = () => {
             else if (answers.cmd == "Add Employee") {
                 addEmployee();
             }
+            else if (answers.cmd == "Add Role") {
+                addRole();
+            }
         });
 }
 
