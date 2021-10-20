@@ -1,6 +1,7 @@
 // required packages
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
+const colors = require("colors");
 require("console.table");
 
 // creates a connection to the db
@@ -22,7 +23,7 @@ const cmdPrompt = () => {
                 type: "list",
                 name: "cmd",
                 message: "What would you like to do?",
-                choices: ["View All Employees", "View All Roles", "View All Departments", "Add Employee", "Add Role", "Add Department", "Update Employee Role", "Quit"]
+                choices: ["View All Employees", "View All Roles", "View All Departments", "Add Employee", "Add Role", "Add Department", "Update Employee Role", "Quit".red]
             }
         ])
         .then((answers) => {
@@ -52,7 +53,7 @@ const cmdPrompt = () => {
                     if (err) {
                         return console.log(err);
                     }
-                    console.log("Thank you for using the employee");
+                    console.log(colors.rainbow("Thank you for using the employee management system"));
                 });
             }
         });
@@ -61,7 +62,7 @@ const cmdPrompt = () => {
 // function for viewing all employees in the db
 const viewAllEmployees = () => {
     const sql = `
-                SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS department_name, roles.salary, CONCAT(managers.first_name," ", managers.last_name) AS manager
+                SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS department, roles.salary, CONCAT(managers.first_name," ", managers.last_name) AS manager
                 FROM employees
                 LEFT JOIN roles
                 ON employees.role_id = roles.id
@@ -75,7 +76,17 @@ const viewAllEmployees = () => {
             console.log(err);
             return;
         }
-        console.table(rows);
+        console.table(rows.map((employee) => {
+            return {
+                ["ID".brightRed.bold]: colors.brightRed(employee.id),
+                ["First Name".yellow.bold]: colors.yellow(employee.first_name),
+                ["Last Name".yellow.bold]: colors.yellow(employee.last_name),
+                ["Title".brightGreen.bold]: colors.brightGreen(employee.title),
+                ["Department".brightCyan.bold]: colors.brightCyan(employee.department),
+                ["Salary".brightBlue.bold]: colors.brightBlue(employee.salary),
+                ["Manager".brightMagenta.bold]: colors.brightMagenta(employee.manager)
+            }
+        }));
         cmdPrompt();
     });
 }
@@ -83,7 +94,7 @@ const viewAllEmployees = () => {
 // function for viewing all roles in the db
 const viewAllRoles = () => {
     const sql = `
-        SELECT roles.id, roles.title, departments.name AS department_name, roles.salary
+        SELECT roles.id, roles.title, departments.name AS department, roles.salary
         FROM roles
         LEFT JOIN departments
         ON roles.department_id = departments.id
@@ -93,7 +104,14 @@ const viewAllRoles = () => {
             console.log(err);
             return;
         }
-        console.table(rows);
+        console.table(rows.map((role) => {
+            return {
+                ["ID".brightRed.bold]: colors.brightRed(role.id),
+                ["Title".yellow.bold]: colors.yellow(role.title),
+                ["Department".brightGreen.bold]: colors.brightGreen(role.department),
+                ["Salary".brightCyan.bold]: colors.brightCyan(role.salary)
+            }
+        }));
         cmdPrompt();
     });
 }
@@ -106,7 +124,12 @@ const viewAllDepartments = () => {
             console.log(err);
             return;
         }
-        console.table(rows);
+        console.table(rows.map((department) => {
+            return {
+                ["ID".brightRed.bold]: colors.brightRed(department.id),
+                ["Name".yellow.bold]: colors.yellow(department.name)
+            }
+        }));
         cmdPrompt();
     });
 }
