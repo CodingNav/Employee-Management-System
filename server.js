@@ -41,6 +41,9 @@ const cmdPrompt = () => {
             else if (answers.cmd == "Add Role") {
                 addRole();
             }
+            else if (answers.cmd == "Add Department") {
+                addDepartment();
+            }
         });
 }
 
@@ -146,7 +149,7 @@ const addEmployee = () => {
                 .then((answers) => {
                     const sql = `
                         INSERT INTO employees (first_name, last_name, role_id, manager_id)
-                        VALUES (${answers.first_name}, ${answers.last_name}, ${answers.role}, ${answers.manager})
+                        VALUES (${answers.first_name}, ${answers.last_name}, ${answers.role}, ${answers.manager});
                     `;
                     db.query(sql, (err, rows) => {
                         if (err) {
@@ -195,7 +198,7 @@ const addRole = () => {
         .then((answers) => {
             const sql = `
             INSERT INTO roles (title, salary, department_id)
-            VALUES (${answers.role}, ${answers.salary}, ${answers.department})
+            VALUES (${answers.role}, ${answers.salary}, ${answers.department});
             `;
             db.query(sql, (err, rows) => {
                 if (err) {
@@ -208,4 +211,28 @@ const addRole = () => {
     });
 }
 
+// function to add a new department to the db
+const addDepartment = () => {
+    inquirer
+    .prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "What is the name of the department?"
+        }
+    ])
+    .then((answers) => {
+        const sql = `
+        INSERT INTO departments (name)
+        VALUES (${answers.name});
+        `
+        db.query(sql, (err, rows) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log("Added " + answers.name + " to the database");
+        });
+    });
+}
 cmdPrompt();
