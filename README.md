@@ -21,6 +21,10 @@ Developers frequently have to create interfaces that allow non-developers to eas
 ## Preview
 <img src="./images/screenshot.png" alt="Web Page" width="100%">
 
+
+https://user-images.githubusercontent.com/58195156/138181585-872f293c-3da2-4070-9160-075cc920e89a.mov
+
+
 ## User Story
 ```
 AS A business owner
