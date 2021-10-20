@@ -44,6 +44,9 @@ const cmdPrompt = () => {
             else if (answers.cmd == "Add Department") {
                 addDepartment();
             }
+            else if (answers.cmd == "Update Employee Role") {
+                updateEmployeeRole();
+            }
         });
 }
 
@@ -233,6 +236,64 @@ const addDepartment = () => {
             }
             console.log("Added " + answers.name + " to the database");
         });
+    });
+}
+
+// function to update an employee in the db
+const updateEmployeeRole = () => {
+    const sql = `SELECT * FROM employees`;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        const sql = `SELECT * FROM roles`;
+        db.query(sql, (err, role_rows) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "name",
+                    message: "Which employee's role do you want to update?",
+                    choices: rows.map((employee) => {
+                        return {
+                            name: employee.first_name + " " + employee.last_name,
+                            value: employee.id
+                        }
+                    })
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "Which role do you want to assign the selected employee?",
+                    choices: role_rows.map((role) => {
+                        return {
+                            name: role.title,
+                            value: role.id
+                        }
+                    })
+                }
+            ])
+            .then((answers) => {
+                const sql = `
+                UPDATE employees
+                SET role_id = "${answers.role}"
+                WHERE employee_id = "${answers.name}"
+                `;
+                db.query(sql, (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log("Updated employee's role")
+                });
+            });
+        })
+
     });
 }
 
