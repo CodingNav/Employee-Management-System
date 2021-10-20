@@ -29,23 +29,23 @@ const cmdPrompt = () => {
             }
         ])
         .then((answers) => {
-            if (answers.cmd == "View All Employees") {
-                viewAllEmployees();
+            if (answers.cmd == "View All Departments") {
+                viewAllDepartments();
             }
             else if (answers.cmd == "View All Roles") {
                 viewAllRoles();
             }
-            else if (answers.cmd == "View All Departments") {
-                viewAllDepartments();
+            else if (answers.cmd == "View All Employees") {
+                viewAllEmployees();
             }
-            else if (answers.cmd == "Add Employee") {
-                addEmployee();
+            else if (answers.cmd == "Add Department") {
+                addDepartment();
             }
             else if (answers.cmd == "Add Role") {
                 addRole();
             }
-            else if (answers.cmd == "Add Department") {
-                addDepartment();
+            else if (answers.cmd == "Add Employee") {
+                addEmployee();
             }
             else if (answers.cmd == "Update Employee Role") {
                 updateEmployeeRole();
