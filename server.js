@@ -1,10 +1,10 @@
 // required packages
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
+const cTable = require("console.table");
 const colors = require("colors");
 const figlet = require("figlet");
 const boxen = require("boxen");
-require("console.table");
 
 // creates a connection to the db
 const db = mysql.createConnection(
@@ -78,7 +78,7 @@ const viewAllEmployees = () => {
             console.log(err);
             return;
         }
-        console.table(rows.map((employee) => {
+        const table = cTable.getTable(rows.map((employee) => {
             return {
                 ["ID".brightRed.bold]: colors.brightRed(employee.id),
                 ["First Name".yellow.bold]: colors.yellow(employee.first_name),
@@ -89,6 +89,7 @@ const viewAllEmployees = () => {
                 ["Manager".brightMagenta.bold]: colors.brightMagenta(employee.manager)
             }
         }));
+        console.log(boxen(table, {title: "Employees".rainbow.bold, padding: 1, margin: 1, titleAlignment: "center"}));
         cmdPrompt();
     });
 }
@@ -106,7 +107,7 @@ const viewAllRoles = () => {
             console.log(err);
             return;
         }
-        console.table(rows.map((role) => {
+        const table = cTable.getTable(rows.map((role) => {
             return {
                 ["ID".brightRed.bold]: colors.brightRed(role.id),
                 ["Title".yellow.bold]: colors.yellow(role.title),
@@ -114,6 +115,7 @@ const viewAllRoles = () => {
                 ["Salary".brightCyan.bold]: colors.brightCyan(role.salary)
             }
         }));
+        console.log(boxen(table, {title: "Roles".rainbow.bold, padding: 1, margin: 1, titleAlignment: "center"}));
         cmdPrompt();
     });
 }
@@ -126,12 +128,13 @@ const viewAllDepartments = () => {
             console.log(err);
             return;
         }
-        console.table(rows.map((department) => {
+        const table = cTable.getTable(rows.map((department) => {
             return {
                 ["ID".brightRed.bold]: colors.brightRed(department.id),
                 ["Name".yellow.bold]: colors.yellow(department.name)
             }
         }));
+        console.log(boxen(table, {title: "Departments".rainbow.bold, padding: 1, margin: 1, titleAlignment: "center"}));
         cmdPrompt();
     });
 }
