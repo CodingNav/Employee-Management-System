@@ -53,7 +53,7 @@ const cmdPrompt = () => {
 // function for viewing all employees in the db
 const viewAllEmployees = () => {
     const sql = `
-                SELECT employees.id, employees.first_name, employees.last_name, departments.name AS department_name, roles.salary, CONCAT(managers.first_name," ", managers.last_name) AS manager
+                SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS department_name, roles.salary, CONCAT(managers.first_name," ", managers.last_name) AS manager
                 FROM employees
                 LEFT JOIN roles
                 ON employees.role_id = roles.id
@@ -201,7 +201,7 @@ const addRole = () => {
         .then((answers) => {
             const sql = `
             INSERT INTO roles (title, salary, department_id)
-            VALUES ("${answers.role}", "${answers.salary}", "${answers.department}");
+            VALUES ("${answers.role}", ${answers.salary}, ${answers.department});
             `;
             db.query(sql, (err, rows) => {
                 if (err) {
@@ -281,8 +281,8 @@ const updateEmployeeRole = () => {
             .then((answers) => {
                 const sql = `
                 UPDATE employees
-                SET role_id = "${answers.role}"
-                WHERE employee_id = "${answers.name}"
+                SET role_id = ${answers.role}
+                WHERE id = ${answers.name}
                 `;
                 db.query(sql, (err, rows) => {
                     if (err) {
